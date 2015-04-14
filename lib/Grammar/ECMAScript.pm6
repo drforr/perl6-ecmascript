@@ -451,10 +451,14 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
+  # has tests
+  #
   rule SingleEscapeCharacter {
     '\'' | '"' | '\\' | 'b' | 'f' | 'n' | 'r' | 't' | 'v'
   }
 
+  # has tests
+  #
   rule EscapeCharacter {
     <SingleEscapeCharacter>
   | <DecimalDigit>
@@ -462,27 +466,39 @@ grammar Grammar::ECMAScript {
   | 'u'
   }
 
-  rule HexEscapeSequence {
+  # has tests
+  #
+  token HexEscapeSequence {
     'x' <HexDigit> <HexDigit>
   }
 
-  rule UnicodeEscapeSequence {
+  # has tests
+  #
+  token UnicodeEscapeSequence {
     'u' <HexDigit> <HexDigit> <HexDigit> <HexDigit>
   }
 
+  # has tests
+  #
   rule NumericLiteral {
     <DecimalLiteral>
   | <HexIntegerLiteral>
   }
 
+  # has tests
+  #
   token HexIntegerLiteral {
     '0' <[xX]> <HexDigit>+
   }
 
+  # has tests
+  #
   token HexDigit {
     <DecimalDigit> | <[a..f]> | <[A..F]>
   }
 
+  # has tests
+  #
   token DecimalLiteral {
     <DecimalDigit>+ '.' <DecimalDigit>* <ExponentPart>?
   | '.'? <DecimalDigit>+ <ExponentPart>?
@@ -491,10 +507,14 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
+  # has tests
+  #
   token DecimalDigit {
     <[0..9]>
   }
 
+  # has tests
+  #
   token ExponentPart {
     <[eE]> <[+-]>? <DecimalDigit>+
   }
@@ -526,7 +546,9 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule UnicodeLetter {
+  # has tests
+  #
+  token UnicodeLetter {
     <[\x[0041]..\x[005A]]>
   | <[\x[0061]..\x[007A]]>
   | \x[00AA]
@@ -795,7 +817,9 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule UnicodeCombiningMark {
+  # has tests
+  #
+  token UnicodeCombiningMark {
     <[\x[0300]..\x[034E]]>
   | <[\x[0360]..\x[0362]]>
   | <[\x[0483]..\x[0486]]>
@@ -902,7 +926,9 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule UnicodeDigit {
+  # has tests
+  #
+  token UnicodeDigit {
     <[\x[0030]..\x[0039]]>
   | <[\x[0660]..\x[0669]]>
   | <[\x[06F0]..\x[06F9]]>
@@ -929,7 +955,9 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule UnicodeConnectorPunctuation {
+  # has tests
+  #
+  token UnicodeConnectorPunctuation {
     \x[005F]
   | <[\x[203F]..\x[2040]]>
   | \x[30FB]
@@ -942,9 +970,11 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
+  # has tests
+  #
   rule Comment {
 #    '/*' (options {greedy=false;} : .)* '*/'
-    '/*' .* '*/'
+    '/*' .*? '*/'
   }
 
   token LineComment {
@@ -954,6 +984,8 @@ grammar Grammar::ECMAScript {
 
   #
   # Literal
+  #
+  # has tests
   #
   token LT {
     \n       # Line feed.
@@ -967,6 +999,8 @@ grammar Grammar::ECMAScript {
   #
   #
   # Literal
+  #
+  # has tests
   #
   token WhiteSpace {
     ( \t | \v | \f | ' ' | \x[00A0] )

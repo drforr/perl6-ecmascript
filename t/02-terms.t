@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 164;
+plan 169;
 
 use Grammar::ECMAScript;
 
@@ -105,11 +105,22 @@ ok $g.subparse( q{}, rule => 'EOF_bang' ), 'EOF_bang';
 ok $g.subparse( q{}, rule => 'equalityExpression' ), 'equalityExpression';
 ok $g.subparse( q{}, rule => 'equalityExpressionNoIn' ),
    'equalityExpressionNoIn';
-ok $g.subparse( q{}, rule => 'EscapeCharacter' ), 'EscapeCharacter';
+
+nok $g.subparse( q{},   rule => 'EscapeCharacter' ), 'EscapeCharacter';
+ok  $g.subparse( q{\\}, rule => 'EscapeCharacter' ), 'EscapeCharacter';
+ok  $g.subparse( q{f},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
+ok  $g.subparse( q{'},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
+ok  $g.subparse( q{u},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
+
 ok $g.subparse( q{}, rule => 'EscapeOrWhitespaceCharacter' ),
    'EscapeOrWhitespaceCharacter';
 ok $g.subparse( q{}, rule => 'EscapeSequence' ), 'EscapeSequence';
-ok $g.subparse( q{}, rule => 'ExponentPart' ), 'ExponentPart';
+
+nok $g.subparse( q{},    rule => 'ExponentPart' ), 'ExponentPart';
+ok  $g.subparse( q{e0},  rule => 'ExponentPart' ), 'ExponentPart';
+ok  $g.subparse( q{E1},  rule => 'ExponentPart' ), 'ExponentPart';
+ok  $g.subparse( q{E-2}, rule => 'ExponentPart' ), 'ExponentPart';
+
 ok $g.subparse( q{}, rule => 'expression' ), 'expression';
 ok $g.subparse( q{}, rule => 'expressionNoIn' ), 'expressionNoIn';
 ok $g.subparse( q{}, rule => 'expressionStatement' ), 'expressionStatement';
@@ -131,7 +142,10 @@ ok  $g.subparse( q{9}, rule => 'HexDigit' ), 'HexDigit';
 ok  $g.subparse( q{a}, rule => 'HexDigit' ), 'HexDigit';
 ok  $g.subparse( q{F}, rule => 'HexDigit' ), 'HexDigit';
 
-ok $g.subparse( q{}, rule => 'HexEscapeSequence' ), 'HexEscapeSequence';
+nok $g.subparse( q{}, rule => 'HexEscapeSequence' ), 'HexEscapeSequence';
+ok  $g.subparse( q{x00}, rule => 'HexEscapeSequence' ), 'HexEscapeSequence';
+ok  $g.subparse( q{x0f}, rule => 'HexEscapeSequence' ), 'HexEscapeSequence';
+ok  $g.subparse( q{xA3}, rule => 'HexEscapeSequence' ), 'HexEscapeSequence';
 
 nok $g.subparse( q{},      rule => 'HexIntegerLiteral' ), 'HexIntegerLiteral';
 nok $g.subparse( q{0x},    rule => 'HexIntegerLiteral' ), 'HexIntegerLiteral';
@@ -188,7 +202,11 @@ ok $g.subparse( q{}, rule => 'multiplicativeExpression' ),
    'multiplicativeExpression';
 ok $g.subparse( q{}, rule => 'newExpression' ), 'newExpression';
 ok $g.subparse( q{}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-ok $g.subparse( q{}, rule => 'NumericLiteral' ), 'NumericLiteral';
+
+nok $g.subparse( q{}, rule => 'NumericLiteral' ), 'NumericLiteral';
+ok  $g.subparse( q{3.27e-7}, rule => 'NumericLiteral' ), 'NumericLiteral';
+ok  $g.subparse( q{0x234af}, rule => 'NumericLiteral' ), 'NumericLiteral';
+
 ok $g.subparse( q{}, rule => 'objectLiteral' ), 'objectLiteral';
 ok $g.subparse( q{}, rule => 'postfixExpression' ), 'postfixExpression';
 ok $g.subparse( q{}, rule => 'primaryExpression' ), 'primaryExpression';
@@ -259,8 +277,12 @@ nok $g.subparse( q{},          rule => 'UnicodeDigit' ), 'UnicodeDigit literal';
 ok  $g.subparse( qq{\x[0031]}, rule => 'UnicodeDigit' ), 'UnicodeDigit literal';
 nok $g.subparse( q{\x[0265]},  rule => 'UnicodeDigit' ), 'UnicodeDigit literal';
 
-ok $g.subparse( q{}, rule => 'UnicodeEscapeSequence' ),
-   'UnicodeEscapeSequence';
+nok $g.subparse( q{}, rule => 'UnicodeEscapeSequence' ),
+    'UnicodeEscapeSequence';
+ok  $g.subparse( q{u0000}, rule => 'UnicodeEscapeSequence' ),
+    'UnicodeEscapeSequence';
+ok  $g.subparse( q{ufF33}, rule => 'UnicodeEscapeSequence' ),
+    'UnicodeEscapeSequence';
 
 #
 # Literal
