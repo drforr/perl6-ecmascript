@@ -9,14 +9,8 @@ use v6;
 
 grammar Grammar::ECMAScript {
 
-  rule LT_bang { <LT> } # XXX Need to research the proper definition
+  token LT_bang { <LT> } # XXX Need to research the proper definition
   rule EOF_bang { <EOF> } # XXX Need to research the proper definition
-
-#options
-#{
-#	backtrack=true;
-#	memoize=true;
-#}
 
   #rule program {
   rule TOP {
@@ -481,15 +475,15 @@ grammar Grammar::ECMAScript {
   | <HexIntegerLiteral>
   }
 
-  rule HexIntegerLiteral {
+  token HexIntegerLiteral {
     '0' <[xX]> <HexDigit>+
   }
 
-  rule HexDigit {
+  token HexDigit {
     <DecimalDigit> | <[a..f]> | <[A..F]>
   }
 
-  rule DecimalLiteral {
+  token DecimalLiteral {
     <DecimalDigit>+ '.' <DecimalDigit>* <ExponentPart>?
   | '.'? <DecimalDigit>+ <ExponentPart>?
   }
@@ -497,19 +491,19 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule DecimalDigit {
+  token DecimalDigit {
     <[0..9]>
   }
 
-  rule ExponentPart {
+  token ExponentPart {
     <[eE]> <[+-]>? <DecimalDigit>+
   }
 
-  rule Identifier {
+  token Identifier {
     <IdentifierStart> <IdentifierPart>*
   }
 
-  rule IdentifierStart {
+  token IdentifierStart {
     <UnicodeLetter>
   | '$'
   | '_'
@@ -953,15 +947,15 @@ grammar Grammar::ECMAScript {
     '/*' .* '*/'
   }
 
-  rule LineComment {
+  token LineComment {
 #    '//' ~( <LT> )*
-    '//' <!LT>*
+    '//' .* [ \n | $ ]
   }
 
   #
   # Literal
   #
-  rule LT {
+  token LT {
     \n       # Line feed.
   | \r       # Carriage return.
   | \x[2028] # Line separator.
@@ -974,8 +968,13 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
-  rule WhiteSpace {
+  token WhiteSpace {
     ( \t | \v | \f | ' ' | \x[00A0] )
   }
+
+  #
+  # Override whitespace to disallow newlines.
+  #
+  token ws { \h* }
 
 }

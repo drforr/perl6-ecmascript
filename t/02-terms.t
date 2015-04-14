@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 158;
+plan 164;
 
 use Grammar::ECMAScript;
 
@@ -79,7 +79,14 @@ nok $g.subparse( q{},  rule => 'DecimalDigit' ), 'DecimalDigit literal';
 ok  $g.subparse( q{0}, rule => 'DecimalDigit' ), 'DecimalDigit literal';
 nok $g.subparse( q{a}, rule => 'DecimalDigit' ), 'DecimalDigit literal';
 
-ok $g.subparse( q{}, rule => 'DecimalLiteral' ), 'DecimalLiteral';
+nok $g.subparse( q{},         rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{23},       rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{23e4},     rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{.23},      rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{.23e-2},   rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{45.23},    rule => 'DecimalLiteral' ), 'DecimalLiteral';
+ok  $g.subparse( q{45.23E-7}, rule => 'DecimalLiteral' ), 'DecimalLiteral';
+
 ok $g.subparse( q{}, rule => 'defaultClause' ), 'defaultClause';
 ok $g.subparse( q{}, rule => 'DoubleStringCharacter' ),
    'DoubleStringCharacter';
@@ -147,7 +154,11 @@ ok $g.subparse( q{}, rule => 'leftHandSideExpression' ),
 #
 # Literal
 #
-#ok $g.subparse( q{// foo}, rule => 'LineComment' ), 'LineComment literal';
+nok $g.subparse( q{},          rule => 'LineComment' ), 'LineComment literal';
+ok  $g.subparse( q{//},        rule => 'LineComment' ), 'LineComment literal';
+ok  $g.subparse( q{// },       rule => 'LineComment' ), 'LineComment literal';
+ok  $g.subparse( q{//foo},     rule => 'LineComment' ), 'LineComment literal';
+ok  $g.subparse( q{//foo bar}, rule => 'LineComment' ), 'LineComment literal';
 
 ok $g.subparse( q{}, rule => 'literal' ), 'literal';
 ok $g.subparse( q{}, rule => 'logicalANDExpression' ), 'logicalANDExpression';
