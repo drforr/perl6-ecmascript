@@ -429,19 +429,22 @@ grammar Grammar::ECMAScript {
     $$
   }
 
-  rule EscapeSequence {
+  token EscapeSequence {
     <CharacterEscapeSequence>
   | '0'
   | <HexEscapeSequence>
   | <UnicodeEscapeSequence>
   }
 
-  rule CharacterEscapeSequence {
+  token CharacterEscapeSequence {
     <SingleEscapeCharacter>
   | <NonEscapeCharacter>
   }
 
   # XXX Refactor out the ~() for later use
+  #
+  # has tests
+  #
   rule EscapeOrWhitespaceCharacter { <EscapeCharacter> | <LT> }
   rule NonEscapeCharacter {
 #    ~( <EscapeCharacter> | <LT> )
@@ -453,13 +456,13 @@ grammar Grammar::ECMAScript {
   #
   # has tests
   #
-  rule SingleEscapeCharacter {
+  token SingleEscapeCharacter {
     '\'' | '"' | '\\' | 'b' | 'f' | 'n' | 'r' | 't' | 'v'
   }
 
   # has tests
   #
-  rule EscapeCharacter {
+  token EscapeCharacter {
     <SingleEscapeCharacter>
   | <DecimalDigit>
   | 'x'
@@ -480,7 +483,7 @@ grammar Grammar::ECMAScript {
 
   # has tests
   #
-  rule NumericLiteral {
+  token NumericLiteral {
     <DecimalLiteral>
   | <HexIntegerLiteral>
   }
@@ -530,7 +533,7 @@ grammar Grammar::ECMAScript {
   | '\\' <UnicodeEscapeSequence>
   }
 
-  rule IdentifierPart {
+  token IdentifierPart {
     # Avoids ambiguity, as some <IdentifierStart> chars also match
     # following alternatives.
 # XXX May not be the right thing...
@@ -972,7 +975,7 @@ grammar Grammar::ECMAScript {
   #
   # has tests
   #
-  rule Comment {
+  token Comment {
 #    '/*' (options {greedy=false;} : .)* '*/'
     '/*' .*? '*/'
   }
