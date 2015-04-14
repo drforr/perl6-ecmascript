@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 169;
+plan 192;
 
 use Grammar::ECMAScript;
 
@@ -46,7 +46,18 @@ ok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
 ok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
 ok $g.parse( q{}, rule => 'caseClause' ), 'caseClause';
 ok $g.parse( q{}, rule => 'catchClause' ), 'catchClause';
-ok $g.parse( q{}, rule => 'CharacterEscapeSequence' ),
+
+nok $g.parse( q{}, rule => 'CharacterEscapeSequence' ),
+   'CharacterEscapeSequence';
+ok  $g.parse( q{'}, rule => 'CharacterEscapeSequence' ),
+   'CharacterEscapeSequence';
+ok  $g.parse( q{a}, rule => 'CharacterEscapeSequence' ),
+   'CharacterEscapeSequence';
+nok $g.parse( q{0}, rule => 'CharacterEscapeSequence' ),
+   'CharacterEscapeSequence';
+nok $g.parse( q{x}, rule => 'CharacterEscapeSequence' ),
+   'CharacterEscapeSequence';
+nok $g.parse( qq{\n}, rule => 'CharacterEscapeSequence' ),
    'CharacterEscapeSequence';
 
 #
@@ -90,8 +101,6 @@ ok  $g.parse( q{45.23E-7}, rule => 'DecimalLiteral' ), 'DecimalLiteral';
 ok $g.parse( q{}, rule => 'defaultClause' ), 'defaultClause';
 ok $g.parse( q{}, rule => 'DoubleStringCharacter' ),
    'DoubleStringCharacter';
-ok $g.parse( q{}, rule => 'DoubleStringNonCharacter' ),
-   'DoubleStringNonCharacter';
 ok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
 
 #
@@ -112,18 +121,18 @@ ok  $g.parse( q{f},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
 ok  $g.parse( q{'},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
 ok  $g.parse( q{u},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
 
-nok $g.parse( q{},     rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
-ok  $g.parse( q{\\},   rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
-ok  $g.parse( q{f},    rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
-ok  $g.parse( q{'},    rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
-ok  $g.parse( q{u},    rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
-ok  $g.parse( qq{\r},  rule => 'EscapeOrWhitespaceCharacter' ),
-   'EscapeOrWhitespaceCharacter';
+#nok $g.parse( q{},     rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
+#ok  $g.parse( q{\\},   rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
+#ok  $g.parse( q{f},    rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
+#ok  $g.parse( q{'},    rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
+#ok  $g.parse( q{u},    rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
+#ok  $g.parse( qq{\r},  rule => 'EscapeOrWhitespaceCharacter' ),
+#   'EscapeOrWhitespaceCharacter';
 
 ok $g.parse( q{}, rule => 'EscapeSequence' ), 'EscapeSequence';
 
@@ -213,13 +222,15 @@ ok $g.parse( q{}, rule => 'multiplicativeExpression' ),
    'multiplicativeExpression';
 ok $g.parse( q{}, rule => 'newExpression' ), 'newExpression';
 
-nok $g.parse( q{}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-nok $g.parse( q{n}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-nok $g.parse( q{x}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-nok $g.parse( q{0}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-nok $g.parse( q{'}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-ok  $g.parse( q{a}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
-ok  $g.parse( q{ }, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{},   rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{n},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{x},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{0},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{\\}, rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+nok $g.parse( q{'},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+ok  $g.parse( q{ },  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+ok  $g.parse( q{a},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
+ok  $g.parse( q{y},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
 
 nok $g.parse( q{},        rule => 'NumericLiteral' ), 'NumericLiteral';
 ok  $g.parse( q{3.27e-7}, rule => 'NumericLiteral' ), 'NumericLiteral';
@@ -252,10 +263,7 @@ ok  $g.parse( q{b}, rule => 'SingleEscapeCharacter' ),
 nok $g.parse( q{k}, rule => 'SingleEscapeCharacter' ),
    'SingleEscapeCharacter literal';
 
-ok $g.parse( q{}, rule => 'SingleStringCharacter' ),
-   'SingleStringCharacter';
-ok $g.parse( q{}, rule => 'SingleStringNonCharacter' ),
-   'SingleStringNonCharacter';
+ok $g.parse( q{}, rule => 'SingleStringCharacter' ), 'SingleStringCharacter';
 ok $g.parse( q{}, rule => 'sourceElement' ), 'sourceElement';
 ok $g.parse( q{}, rule => 'sourceElements' ), 'sourceElements';
 ok $g.parse( q{}, rule => 'statement' ), 'statement';
