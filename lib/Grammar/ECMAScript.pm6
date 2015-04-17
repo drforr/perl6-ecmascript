@@ -91,6 +91,8 @@ grammar Grammar::ECMAScript {
     <variableDeclaration>+ % [<LT>* ',' <LT>*]
   }
 
+  # has tests
+  #
   rule variableDeclarationListNoIn {
 #    <variableDeclarationNoIn> [ <LT>* ',' <LT>* <variableDeclarationNoIn> ]*
     <variableDeclarationNoIn>+ % [<LT>* ',' <LT>*]
@@ -160,6 +162,8 @@ grammar Grammar::ECMAScript {
     'for' <LT>* '(' [ <LT>* <forStatementInitialiserPart> ]? <LT>* ';' [ <LT>* <expression> ]? <LT>* ';' [ <LT>* <expression> ]? <LT>* ')' <LT>* <statement>
   }
 
+  # has tests
+  #
   rule forStatementInitialiserPart {
     <expressionNoIn>
   | 'var' <LT>* <variableDeclarationListNoIn>
@@ -232,6 +236,8 @@ grammar Grammar::ECMAScript {
     'try' <LT>* <statementBlock> <LT>* [ <finallyClause> | <catchClause> [ <LT>* <finallyClause> ]? ]
   }
 
+  # has tests
+  #
   rule catchClause {
     'catch' <LT>* '(' <LT>* <Identifier> <LT>* ')' <LT>* statementBlock
   }
@@ -242,6 +248,8 @@ grammar Grammar::ECMAScript {
 
   #
   # expressions
+  #
+  # has tests
   #
   rule expression {
 #   <assignmentExpression> [ <LT>* ',' <LT>* <assignmentExpression> ]*
@@ -306,7 +314,7 @@ grammar Grammar::ECMAScript {
   #
   rule arguments {
 #    '(' [<LT>* <assignmentExpression> [<LT>* ',' <LT>* <assignmentExpression>]*]? <LT>* ')'
-    '(' [<LT>* <assignmentExpression>+ % [<LT>* ','<LT>*] ]? <LT>* ')'
+    '(' [<LT>* <assignmentExpression>+ % [<LT>* ',' <LT>*] ]? <LT>* ')'
   }
 
   # has tests
@@ -364,13 +372,13 @@ grammar Grammar::ECMAScript {
     <bitwiseORExpressionNoIn>+ % [<LT>* '&&' <LT>*]
   }
 
+  # has tests
+  #
   rule bitwiseORExpression {
 #    <bitwiseXORExpression> [ <LT>* '|' <LT>* <bitwiseXORExpression> ]*
     <bitwiseXORExpression>+ % [<LT>* '|' <LT>*]
   }
 
-  # has tests
-  #
   rule bitwiseORExpressionNoIn {
 #    <bitwiseXORExpressionNoIn> [ <LT>* '|' <LT>* <bitwiseXORExpressionNoIn> ]*
     <bitwiseXORExpressionNoIn>+ % [<LT>* '|' <LT>*]
@@ -469,6 +477,8 @@ grammar Grammar::ECMAScript {
 
   #
   # arrayLiteral definition.
+  #
+  # has tests
   #
   rule arrayLiteral {
     '[' <LT>* <assignmentExpression>? [ <LT>* ',' [ <LT>* <assignmentExpression> ]? ]* <LT>* ']'

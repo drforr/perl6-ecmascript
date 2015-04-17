@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 284;
+plan 312;
 
 use Grammar::ECMAScript;
 
@@ -17,7 +17,8 @@ nok $g.parse( q{}, rule => 'arguments' ), 'arguments';
 ok  $g.parse( q{(a)}, rule => 'arguments' ), 'arguments';
 ok  $g.parse( q{(a,b)}, rule => 'arguments' ), 'arguments';
 
-ok $g.parse( q{}, rule => 'arrayLiteral' ), 'arrayLiteral';
+nok $g.parse( q{}, rule => 'arrayLiteral' ), 'arrayLiteral';
+ok  $g.parse( q{[1]}, rule => 'arrayLiteral' ), 'arrayLiteral';
 
 nok $g.parse( q{}, rule => 'assignmentExpression' ), 'assignmentExpression';
 ok  $g.parse( q{ab}, rule => 'assignmentExpression' ), 'assignmentExpression';
@@ -64,10 +65,13 @@ ok  $g.parse( qq{break a_\n}, rule => 'breakStatement' ), 'breakStatement';
 nok $g.parse( q{}, rule => 'callExpression' ), 'callExpression';
 ok  $g.parse( q{a(b)}, rule => 'callExpression' ), 'callExpression';
 
-ok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
+nok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
+# No further testing of callExpressionSuffix needed, the alternations will suffice.
+
 ok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
 
 nok $g.parse( q{}, rule => 'caseClause' ), 'caseClause';
+ok  $g.parse( q{caseA:}, rule => 'caseClause' ), 'caseClause';
 ok  $g.parse( q{caseA:a++;}, rule => 'caseClause' ), 'caseClause';
 
 ok $g.parse( q{}, rule => 'catchClause' ), 'catchClause';
@@ -136,9 +140,7 @@ ok  $g.parse( qq{\\\x[2028]}, rule => 'DoubleStringCharacter' ), # XXX ???
 ok  $g.parse( q{\y},        rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
 
-nok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
-ok  $g.parse( q{do a++ while(1);}, rule => 'doWhileStatement' ), 'doWhileStatement';
-ok  $g.parse( qq{do a++ while(1)\n}, rule => 'doWhileStatement' ), 'doWhileStatement';
+ok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
 
 #
 # Literal
@@ -162,7 +164,7 @@ ok  $g.parse( q{'},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
 ok  $g.parse( q{u},  rule => 'EscapeCharacter' ), 'EscapeCharacter';
 
 nok $g.parse( q{},      rule => 'EscapeSequence' ), 'EscapeSequence';
-nok $g.parse( q{0},     rule => 'EscapeSequence' ), 'EscapeSequence';
+ok  $g.parse( q{0},     rule => 'EscapeSequence' ), 'EscapeSequence';
 nok $g.parse( q{x},     rule => 'EscapeSequence' ), 'EscapeSequence';
 nok $g.parse( qq{\n},   rule => 'EscapeSequence' ), 'EscapeSequence';
 ok  $g.parse( q{'},     rule => 'EscapeSequence' ), 'EscapeSequence';
@@ -176,7 +178,9 @@ ok  $g.parse( q{e0},  rule => 'ExponentPart' ), 'ExponentPart';
 ok  $g.parse( q{E1},  rule => 'ExponentPart' ), 'ExponentPart';
 ok  $g.parse( q{E-2}, rule => 'ExponentPart' ), 'ExponentPart';
 
-ok $g.parse( q{}, rule => 'expression' ), 'expression';
+nok $g.parse( q{}, rule => 'expression' ), 'expression';
+ok  $g.parse( q{a}, rule => 'expression' ), 'expression';
+
 ok $g.parse( q{}, rule => 'expressionNoIn' ), 'expressionNoIn';
 
 nok $g.parse( q{}, rule => 'expressionStatement' ), 'expressionStatement';
@@ -184,6 +188,7 @@ ok  $g.parse( q{a;}, rule => 'expressionStatement' ), 'expressionStatement';
 ok  $g.parse( qq{a\n}, rule => 'expressionStatement' ), 'expressionStatement';
 
 ok $g.parse( q{}, rule => 'finallyClause' ), 'finallyClause';
+
 ok $g.parse( q{}, rule => 'forInStatement' ), 'forInStatement';
 ok $g.parse( q{}, rule => 'forInStatementInitialiserPart' ),
    'forInStatementInitialiserPart';
@@ -205,8 +210,10 @@ ok  $g.parse( q{( $a, \u0000a )}, rule => 'formalParameterList' ),
 
 ok $g.parse( q{}, rule => 'forStatement' ), 'forStatement';
 
-ok $g.parse( q{}, rule => 'forStatementInitialiserPart' ),
-   'forStatementInitialiserPart';
+nok $g.parse( q{}, rule => 'forStatementInitialiserPart' ),
+    'forStatementInitialiserPart';
+ok  $g.parse( q{var a}, rule => 'forStatementInitialiserPart' ),
+    'forStatementInitialiserPart';
 
 ok $g.parse( q{}, rule => 'functionBody' ), 'functionBody';
 
@@ -269,6 +276,7 @@ nok $g.parse( q{}, rule => 'initialiser' ), 'initialiser';
 ok  $g.parse( q{=1}, rule => 'initialiser' ), 'initialiser';
 
 ok $g.parse( q{}, rule => 'initialiserNoIn' ), 'initialiserNoIn';
+
 nok $g.parse( q{}, rule => 'iterationStatement' ), 'iterationStatement';
 # No further testing of iterationStatement needed, the alternations will suffice.
 
@@ -517,8 +525,9 @@ ok  $g.parse( q{a=1,b=a}, rule => 'variableDeclarationList' ),
 
 ok $g.parse( q{}, rule => 'variableDeclarationListNoIn' ),
    'variableDeclarationListNoIn';
+
 ok $g.parse( q{}, rule => 'variableDeclarationNoIn' ),
-   'variableDeclarationNoIn';
+    'variableDeclarationNoIn';
 
 nok $g.parse( q{}, rule => 'variableStatement' ), 'variableStatement';
 ok  $g.parse( q{varA=1;}, rule => 'variableStatement' ), 'variableStatement';
@@ -534,5 +543,4 @@ nok $g.parse( qq{},   rule => 'WhiteSpace' ), 'WhiteSpace literal';
 nok $g.parse( qq{a},  rule => 'WhiteSpace' ), 'WhiteSpace literal';
 ok  $g.parse( qq{\t}, rule => 'WhiteSpace' ), 'WhiteSpace literal';
 
-nok $g.parse( q{}, rule => 'withStatement' ), 'withStatement';
-ok  $g.parse( q{with ( a ) return a}, rule => 'withStatement' ), 'withStatement';
+ok $g.parse( q{}, rule => 'withStatement' ), 'withStatement';
