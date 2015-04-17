@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 210;
+plan 314;
 
 use Grammar::ECMAScript;
 
@@ -40,7 +40,11 @@ ok $g.parse( q{}, rule => 'bitwiseORExpressionNoIn' ),
 ok $g.parse( q{}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
 ok $g.parse( q{}, rule => 'bitwiseXORExpressionNoIn' ),
    'bitwiseXORExpressionNoIn';
-ok $g.parse( q{}, rule => 'breakStatement' ), 'breakStatement';
+
+nok $g.parse( q{},            rule => 'breakStatement' ), 'breakStatement';
+ok  $g.parse( q{break a_;},   rule => 'breakStatement' ), 'breakStatement';
+ok  $g.parse( qq{break a_\n}, rule => 'breakStatement' ), 'breakStatement';
+
 ok $g.parse( q{}, rule => 'callExpression' ), 'callExpression';
 ok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
 ok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
@@ -73,7 +77,12 @@ ok $g.parse( q{}, rule => 'conditionalExpression' ),
    'conditionalExpression';
 ok $g.parse( q{}, rule => 'conditionalExpressionNoIn' ),
    'conditionalExpressionNoIn';
-ok $g.parse( q{}, rule => 'continueStatement' ), 'continueStatement';
+
+nok $g.parse( q{}, rule => 'continueStatement' ), 'continueStatement';
+ok  $g.parse( q{continue a_;}, rule => 'continueStatement' ),
+    'continueStatement';
+ok  $g.parse( qq{continue a_\n}, rule => 'continueStatement' ),
+    'continueStatement';
 
 #
 # Literal
@@ -153,7 +162,22 @@ ok $g.parse( q{}, rule => 'finallyClause' ), 'finallyClause';
 ok $g.parse( q{}, rule => 'forInStatement' ), 'forInStatement';
 ok $g.parse( q{}, rule => 'forInStatementInitialiserPart' ),
    'forInStatementInitialiserPart';
-ok $g.parse( q{}, rule => 'formalParameterList' ), 'formalParameterList';
+
+nok $g.parse( q{}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{()}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{( )}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{(a)}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{( a)}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{(a )}, rule => 'formalParameterList' ),
+    'formalParameterList';
+ok  $g.parse( q{( $a, \u0000a )}, rule => 'formalParameterList' ),
+    'formalParameterList';
+
 ok $g.parse( q{}, rule => 'forStatement' ), 'forStatement';
 ok $g.parse( q{}, rule => 'forStatementInitialiserPart' ),
    'forStatementInitialiserPart';
@@ -213,7 +237,14 @@ ok  $g.parse( q{\u0000},    rule => 'IdentifierStart' ), 'IdentifierStart';
 ok  $g.parse( q{\ufF33},    rule => 'IdentifierStart' ), 'IdentifierStart';
 
 ok $g.parse( q{}, rule => 'ifStatement' ), 'ifStatement';
-ok $g.parse( q{}, rule => 'indexSuffix' ), 'indexSuffix';
+
+nok $g.parse( q{},         rule => 'indexSuffix' ), 'indexSuffix';
+ok  $g.parse( q{[0]},      rule => 'indexSuffix' ), 'indexSuffix';
+ok  $g.parse( q{[a]},      rule => 'indexSuffix' ), 'indexSuffix';
+ok  $g.parse( qq{[\na]},   rule => 'indexSuffix' ), 'indexSuffix';
+ok  $g.parse( qq{[a\n]},   rule => 'indexSuffix' ), 'indexSuffix';
+ok  $g.parse( qq{[\na\n]}, rule => 'indexSuffix' ), 'indexSuffix';
+
 ok $g.parse( q{}, rule => 'initialiser' ), 'initialiser';
 ok $g.parse( q{}, rule => 'initialiserNoIn' ), 'initialiserNoIn';
 ok $g.parse( q{}, rule => 'iterationStatement' ), 'iterationStatement';
@@ -321,12 +352,24 @@ ok  $g.parse( q{3.27e-7},      rule => 'propertyName' ), 'propertyName';
 ok  $g.parse( q{0x234af},      rule => 'propertyName' ), 'propertyName';
 
 ok $g.parse( q{}, rule => 'propertyNameAndValue' ), 'propertyNameAndValue';
-ok $g.parse( q{}, rule => 'propertyReferenceSuffix' ),
+
+nok $g.parse( q{},             rule => 'propertyReferenceSuffix' ),
    'propertyReferenceSuffix';
+ok  $g.parse( q{.a_},   rule => 'propertyReferenceSuffix' ),
+   'propertyReferenceSuffix';
+ok  $g.parse( q{. a_},   rule => 'propertyReferenceSuffix' ),
+   'propertyReferenceSuffix';
+ok  $g.parse( qq{.\na_}, rule => 'propertyReferenceSuffix' ),
+   'propertyReferenceSuffix';
+
 ok $g.parse( q{}, rule => 'relationalExpression' ), 'relationalExpression';
 ok $g.parse( q{}, rule => 'relationalExpressionNoIn' ),
    'relationalExpressionNoIn';
-ok $g.parse( q{}, rule => 'returnStatement' ), 'returnStatement';
+
+nok $g.parse( q{},             rule => 'returnStatement' ), 'returnStatement';
+ok  $g.parse( q{return a_;},   rule => 'returnStatement' ), 'returnStatement';
+ok  $g.parse( qq{return a_\n}, rule => 'returnStatement' ), 'returnStatement';
+
 ok $g.parse( q{}, rule => 'shiftExpression' ), 'shiftExpression';
 
 #
@@ -446,4 +489,5 @@ nok $g.parse( qq{},   rule => 'WhiteSpace' ), 'WhiteSpace literal';
 nok $g.parse( qq{a},  rule => 'WhiteSpace' ), 'WhiteSpace literal';
 ok  $g.parse( qq{\t}, rule => 'WhiteSpace' ), 'WhiteSpace literal';
 
-ok $g.parse( q{}, rule => 'withStatement' ), 'withStatement';
+nok $g.parse( q{}, rule => 'withStatement' ), 'withStatement';
+ok  $g.parse( q{with ( a ) return a}, rule => 'withStatement' ), 'withStatement';

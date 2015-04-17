@@ -33,8 +33,11 @@ grammar Grammar::ECMAScript {
     'function' <LT>* <Identifier>? <LT>* <formalParameterList> <LT>* <functionBody>
   }
 
+  # has tests
+  #
   rule formalParameterList {
-    '(' [<LT>* <Identifier> [<LT>* ',' <LT>* <Identifier>]*]? <LT>* ')'
+#    '(' [<LT>* <Identifier> [<LT>* ',' <LT>* <Identifier>]*]? <LT>* ')'
+    '(' <LT>* <Identifier>* % (<LT>* ',' <LT>*) <LT>* ')'
   }
 
   rule functionBody {
@@ -148,14 +151,20 @@ grammar Grammar::ECMAScript {
   | 'var' <LT>* <variableDeclarationNoIn>
   }
 
+  # has tests
+  #
   rule continueStatement {
     'continue' <Identifier>? [ <LT> | ';' ]
   }
 
+  # has tests
+  #
   rule breakStatement {
     'break' <Identifier>? [ <LT> | ';' ]
   }
 
+  # has tests
+  #
   rule returnStatement {
     'return' <expression>? [ <LT> | ';' ]
   }
@@ -257,10 +266,14 @@ grammar Grammar::ECMAScript {
     '(' [<LT>* <assignmentExpression>+ % ',']? <LT>* ')'
   }
 
+  # has tests
+  #
   rule indexSuffix {
     '[' <LT>* <expression> <LT>* ']'
   }	
 
+  # has tests
+  #
   rule propertyReferenceSuffix {
     '.' <LT>* <Identifier>
   }
