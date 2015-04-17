@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 324;
+plan 284;
 
 use Grammar::ECMAScript;
 
@@ -10,10 +10,18 @@ my $g = Grammar::ECMAScript.new;
 
 ##############################################################################
 
-ok $g.parse( q{}, rule => 'additiveExpression' ), 'additiveExpression';
-ok $g.parse( q{}, rule => 'arguments' ), 'arguments';
+nok $g.parse( q{}, rule => 'additiveExpression' ), 'additiveExpression';
+ok  $g.parse( q{a+b}, rule => 'additiveExpression' ), 'additiveExpression';
+
+nok $g.parse( q{}, rule => 'arguments' ), 'arguments';
+ok  $g.parse( q{(a)}, rule => 'arguments' ), 'arguments';
+ok  $g.parse( q{(a,b)}, rule => 'arguments' ), 'arguments';
+
 ok $g.parse( q{}, rule => 'arrayLiteral' ), 'arrayLiteral';
-ok $g.parse( q{}, rule => 'assignmentExpression' ), 'assignmentExpression';
+
+nok $g.parse( q{}, rule => 'assignmentExpression' ), 'assignmentExpression';
+ok  $g.parse( q{ab}, rule => 'assignmentExpression' ), 'assignmentExpression';
+
 ok $g.parse( q{}, rule => 'assignmentExpressionNoIn' ),
    'assignmentExpressionNoIn';
 
@@ -31,13 +39,21 @@ ok  $g.parse( q{*=},   rule => 'assignmentOperator' ),
 ok  $g.parse( q{>>>=}, rule => 'assignmentOperator' ),
    'assignmentOperator literal';
 
-ok $g.parse( q{}, rule => 'bitwiseANDExpression' ), 'bitwiseANDExpression';
+nok $g.parse( q{}, rule => 'bitwiseANDExpression' ), 'bitwiseANDExpression';
+ok  $g.parse( q{a&b}, rule => 'bitwiseANDExpression' ), 'bitwiseANDExpression';
+
 ok $g.parse( q{}, rule => 'bitwiseANDExpressionNoIn' ),
    'bitwiseANDExpressionNoIn';
-ok $g.parse( q{}, rule => 'bitwiseORExpression' ), 'bitwiseORExpression';
+
+nok $g.parse( q{}, rule => 'bitwiseORExpression' ), 'bitwiseORExpression';
+ok  $g.parse( q{a|b}, rule => 'bitwiseORExpression' ), 'bitwiseORExpression';
+
 ok $g.parse( q{}, rule => 'bitwiseORExpressionNoIn' ),
    'bitwiseORExpressionNoIn';
-ok $g.parse( q{}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
+
+nok $g.parse( q{}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
+ok  $g.parse( q{a^b}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
+
 ok $g.parse( q{}, rule => 'bitwiseXORExpressionNoIn' ),
    'bitwiseXORExpressionNoIn';
 
@@ -45,24 +61,20 @@ nok $g.parse( q{},            rule => 'breakStatement' ), 'breakStatement';
 ok  $g.parse( q{break a_;},   rule => 'breakStatement' ), 'breakStatement';
 ok  $g.parse( qq{break a_\n}, rule => 'breakStatement' ), 'breakStatement';
 
-ok $g.parse( q{}, rule => 'callExpression' ), 'callExpression';
+nok $g.parse( q{}, rule => 'callExpression' ), 'callExpression';
+ok  $g.parse( q{a(b)}, rule => 'callExpression' ), 'callExpression';
+
 ok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
 ok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
-ok $g.parse( q{}, rule => 'caseClause' ), 'caseClause';
+
+nok $g.parse( q{}, rule => 'caseClause' ), 'caseClause';
+ok  $g.parse( q{caseA:a++;}, rule => 'caseClause' ), 'caseClause';
+
 ok $g.parse( q{}, rule => 'catchClause' ), 'catchClause';
 
-nok $g.parse( q{},    rule => 'CharacterEscapeSequence' ),
+nok $g.parse( q{}, rule => 'CharacterEscapeSequence' ),
    'CharacterEscapeSequence';
-nok $g.parse( q{0},   rule => 'CharacterEscapeSequence' ),
-   'CharacterEscapeSequence';
-nok $g.parse( q{x},   rule => 'CharacterEscapeSequence' ),
-   'CharacterEscapeSequence';
-nok $g.parse( qq{\n}, rule => 'CharacterEscapeSequence' ),
-   'CharacterEscapeSequence';
-ok  $g.parse( q{'},   rule => 'CharacterEscapeSequence' ),
-   'CharacterEscapeSequence';
-ok  $g.parse( q{a},   rule => 'CharacterEscapeSequence' ),
-   'CharacterEscapeSequence';
+# No further testing of CharacterEscapeSequence needed, the alternations will suffice.
 
 #
 # Literal
@@ -73,8 +85,11 @@ ok  $g.parse( q{/**/},      rule => 'Comment' ), 'Comment literal';
 ok  $g.parse( q{/*...*/},   rule => 'Comment' ), 'Comment literal';
 ok  $g.parse( q{/* ... */}, rule => 'Comment' ), 'Comment literal';
 
-ok $g.parse( q{}, rule => 'conditionalExpression' ),
+nok $g.parse( q{}, rule => 'conditionalExpression' ),
    'conditionalExpression';
+ok  $g.parse( q{a?1:2}, rule => 'conditionalExpression' ),
+   'conditionalExpression';
+
 ok $g.parse( q{}, rule => 'conditionalExpressionNoIn' ),
    'conditionalExpressionNoIn';
 
@@ -101,7 +116,8 @@ ok  $g.parse( q{.23e-2},   rule => 'DecimalLiteral' ), 'DecimalLiteral';
 ok  $g.parse( q{45.23},    rule => 'DecimalLiteral' ), 'DecimalLiteral';
 ok  $g.parse( q{45.23E-7}, rule => 'DecimalLiteral' ), 'DecimalLiteral';
 
-ok $g.parse( q{}, rule => 'defaultClause' ), 'defaultClause';
+nok $g.parse( q{}, rule => 'defaultClause' ), 'defaultClause';
+ok  $g.parse( q{default:a;}, rule => 'defaultClause' ), 'defaultClause';
 
 nok $g.parse( q{},          rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
@@ -120,7 +136,9 @@ ok  $g.parse( qq{\\\x[2028]}, rule => 'DoubleStringCharacter' ), # XXX ???
 ok  $g.parse( q{\y},        rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
 
-ok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
+nok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
+ok  $g.parse( q{do a++ while(1);}, rule => 'doWhileStatement' ), 'doWhileStatement';
+ok  $g.parse( qq{do a++ while(1)\n}, rule => 'doWhileStatement' ), 'doWhileStatement';
 
 #
 # Literal
@@ -130,7 +148,10 @@ nok $g.parse( q{a}, rule => 'emptyStatement' ), 'emptyStatement literal';
 ok  $g.parse( q{;}, rule => 'emptyStatement' ), 'emptyStatement literal';
 	
 ok $g.parse( q{}, rule => 'EOF' ), 'EOF';
-ok $g.parse( q{}, rule => 'equalityExpression' ), 'equalityExpression';
+
+nok $g.parse( q{}, rule => 'equalityExpression' ), 'equalityExpression';
+ok $g.parse( q{a==b}, rule => 'equalityExpression' ), 'equalityExpression';
+
 ok $g.parse( q{}, rule => 'equalityExpressionNoIn' ),
    'equalityExpressionNoIn';
 
@@ -183,9 +204,12 @@ ok  $g.parse( q{( $a, \u0000a )}, rule => 'formalParameterList' ),
     'formalParameterList';
 
 ok $g.parse( q{}, rule => 'forStatement' ), 'forStatement';
+
 ok $g.parse( q{}, rule => 'forStatementInitialiserPart' ),
    'forStatementInitialiserPart';
+
 ok $g.parse( q{}, rule => 'functionBody' ), 'functionBody';
+
 ok $g.parse( q{}, rule => 'functionDeclaration' ), 'functionDeclaration';
 ok $g.parse( q{}, rule => 'functionExpression' ), 'functionExpression';
 
@@ -220,15 +244,7 @@ ok  $g.parse( q{a_},        rule => 'Identifier' ), 'Identifier';
 ok  $g.parse( q{\u0000a},   rule => 'Identifier' ), 'Identifier';
 
 nok $g.parse( q{},          rule => 'IdentifierPart' ), 'IdentifierPart';
-nok $g.parse( qq{\x[00ab]}, rule => 'IdentifierPart' ), 'IdentifierPart';
-nok $g.parse( q{\x[0265]},  rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{a},         rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{$},         rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{_},         rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{9},         rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{\u0000},    rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( q{\ufF33},    rule => 'IdentifierPart' ), 'IdentifierPart';
-ok  $g.parse( qq{\x[04cb]}, rule => 'IdentifierPart' ), 'IdentifierPart';
+# No further testing of IdentifierPart needed, the alternations will suffice.
 
 nok $g.parse( q{},          rule => 'IdentifierStart' ), 'IdentifierStart';
 nok $g.parse( q{9},         rule => 'IdentifierStart' ), 'IdentifierStart';
@@ -249,12 +265,19 @@ ok  $g.parse( qq{[\na]},   rule => 'indexSuffix' ), 'indexSuffix';
 ok  $g.parse( qq{[a\n]},   rule => 'indexSuffix' ), 'indexSuffix';
 ok  $g.parse( qq{[\na\n]}, rule => 'indexSuffix' ), 'indexSuffix';
 
-ok $g.parse( q{}, rule => 'initialiser' ), 'initialiser';
+nok $g.parse( q{}, rule => 'initialiser' ), 'initialiser';
+ok  $g.parse( q{=1}, rule => 'initialiser' ), 'initialiser';
+
 ok $g.parse( q{}, rule => 'initialiserNoIn' ), 'initialiserNoIn';
-ok $g.parse( q{}, rule => 'iterationStatement' ), 'iterationStatement';
-ok $g.parse( q{}, rule => 'labelledStatement' ), 'labelledStatement';
-ok $g.parse( q{}, rule => 'leftHandSideExpression' ),
+nok $g.parse( q{}, rule => 'iterationStatement' ), 'iterationStatement';
+# No further testing of iterationStatement needed, the alternations will suffice.
+
+nok $g.parse( q{}, rule => 'labelledStatement' ), 'labelledStatement';
+ok  $g.parse( q{a:b;}, rule => 'labelledStatement' ), 'labelledStatement';
+
+nok $g.parse( q{}, rule => 'leftHandSideExpression' ),
    'leftHandSideExpression';
+# No further testing of leftHandSideExpression needed, the alternations will suffice.
 
 #
 # Literal
@@ -287,10 +310,15 @@ ok  $g.parse( q{true},         rule => 'literal' ), 'literal';
 ok  $g.parse( q{false},        rule => 'literal' ), 'literal';
 nok $g.parse( q{maybe},        rule => 'literal' ), 'literal';
 
-ok $g.parse( q{}, rule => 'logicalANDExpression' ), 'logicalANDExpression';
+nok $g.parse( q{}, rule => 'logicalANDExpression' ), 'logicalANDExpression';
+ok  $g.parse( q{a&&b}, rule => 'logicalANDExpression' ), 'logicalANDExpression';
+
 ok $g.parse( q{}, rule => 'logicalANDExpressionNoIn' ),
    'logicalANDExpressionNoIn';
-ok $g.parse( q{}, rule => 'logicalORExpression' ), 'logicalORExpression';
+
+nok $g.parse( q{}, rule => 'logicalORExpression' ), 'logicalORExpression';
+ok  $g.parse( q{a||b}, rule => 'logicalORExpression' ), 'logicalORExpression';
+
 ok $g.parse( q{}, rule => 'logicalORExpressionNoIn' ),
    'logicalORExpressionNoIn';
 
@@ -309,19 +337,13 @@ ok $g.parse( q{}, rule => 'memberExpression' ), 'memberExpression';
 
 nok $g.parse( q{}, rule => 'memberExpressionSuffix' ),
    'memberExpressionSuffix';
-ok  $g.parse( qq{[\na]}, rule => 'memberExpressionSuffix' ),
-   'memberExpressionSuffix';
-ok  $g.parse( qq{[a\n]}, rule => 'memberExpressionSuffix' ),
-   'memberExpressionSuffix';
-ok  $g.parse( qq{[\na\n]}, rule => 'memberExpressionSuffix' ),
-   'memberExpressionSuffix';
-ok  $g.parse( q{. a_}, rule => 'memberExpressionSuffix' ),
-   'memberExpressionSuffix';
-ok  $g.parse( qq{.\na_}, rule => 'memberExpressionSuffix' ),
-   'memberExpressionSuffix';
+# No further testing of memberExpressionSuffix needed, the alternations will suffice.
 
-ok $g.parse( q{}, rule => 'multiplicativeExpression' ),
-   'multiplicativeExpression';
+nok $g.parse( q{}, rule => 'multiplicativeExpression' ),
+    'multiplicativeExpression';
+ok  $g.parse( q{a*b}, rule => 'multiplicativeExpression' ),
+    'multiplicativeExpression';
+
 ok $g.parse( q{}, rule => 'newExpression' ), 'newExpression';
 
 nok $g.parse( q{},   rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
@@ -335,8 +357,7 @@ ok  $g.parse( q{a},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
 ok  $g.parse( q{y},  rule => 'NonEscapeCharacter' ), 'NonEscapeCharacter';
 
 nok $g.parse( q{},        rule => 'NumericLiteral' ), 'NumericLiteral';
-ok  $g.parse( q{3.27e-7}, rule => 'NumericLiteral' ), 'NumericLiteral';
-ok  $g.parse( q{0x234af}, rule => 'NumericLiteral' ), 'NumericLiteral';
+# No further testing of NumericLiteral needed, the alternations will suffice.
 
 ok $g.parse( q{}, rule => 'objectLiteral' ), 'objectLiteral';
 
@@ -345,30 +366,8 @@ ok  $g.parse( q{a++}, rule => 'postfixExpression' ), 'postfixExpression';
 
 ok $g.parse( q{}, rule => 'primaryExpression' ), 'primaryExpression';
 
-nok $g.parse( q{},             rule => 'propertyName' ), 'propertyName';
-nok $g.parse( q{9},            rule => 'propertyName' ), 'propertyName';
-nok $g.parse( qq{\x[00ab]},    rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{a},            rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{$},            rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{ab},           rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{$$},           rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{$a},           rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{a_},           rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{\u0000a},      rule => 'propertyName' ), 'propertyName';
-nok $g.parse( qq{'\n'},        rule => 'propertyName' ), 'propertyName';
-nok $g.parse( qq{'\x[2028]'},  rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'"'},          rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{"'"},          rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'\"'},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{"\""},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'\''},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{"\'"},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'\n'},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'\\\x[2028]'}, rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'\y'},         rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{'foo bar'},    rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{3.27e-7},      rule => 'propertyName' ), 'propertyName';
-ok  $g.parse( q{0x234af},      rule => 'propertyName' ), 'propertyName';
+nok $g.parse( q{}, rule => 'propertyName' ), 'propertyName';
+# No further testing of propertyName needed, the alternations will suffice.
 
 ok $g.parse( q{}, rule => 'propertyNameAndValue' ), 'propertyNameAndValue';
 
@@ -381,7 +380,9 @@ ok  $g.parse( q{. a_},   rule => 'propertyReferenceSuffix' ),
 ok  $g.parse( qq{.\na_}, rule => 'propertyReferenceSuffix' ),
    'propertyReferenceSuffix';
 
-ok $g.parse( q{}, rule => 'relationalExpression' ), 'relationalExpression';
+nok $g.parse( q{}, rule => 'relationalExpression' ), 'relationalExpression';
+ok  $g.parse( q{a<b}, rule => 'relationalExpression' ), 'relationalExpression';
+
 ok $g.parse( q{}, rule => 'relationalExpressionNoIn' ),
    'relationalExpressionNoIn';
 
@@ -389,7 +390,8 @@ nok $g.parse( q{},             rule => 'returnStatement' ), 'returnStatement';
 ok  $g.parse( q{return a_;},   rule => 'returnStatement' ), 'returnStatement';
 ok  $g.parse( qq{return a_\n}, rule => 'returnStatement' ), 'returnStatement';
 
-ok $g.parse( q{}, rule => 'shiftExpression' ), 'shiftExpression';
+nok $g.parse( q{}, rule => 'shiftExpression' ), 'shiftExpression';
+ok  $g.parse( q{a<<b}, rule => 'shiftExpression' ), 'shiftExpression';
 
 #
 # Literal
@@ -422,9 +424,14 @@ ok  $g.parse( q{\\\x[2028]}, rule => 'SingleStringCharacter' ), # XXX ???
 ok  $g.parse( q{\y},        rule => 'SingleStringCharacter' ),
     'SingleStringCharacter';
 
-ok $g.parse( q{}, rule => 'sourceElement' ), 'sourceElement';
+nok $g.parse( q{}, rule => 'sourceElement' ), 'sourceElement';
+# No further testing of sourceElement needed, the alternations will suffice.
+
 ok $g.parse( q{}, rule => 'sourceElements' ), 'sourceElements';
-ok $g.parse( q{}, rule => 'statement' ), 'statement';
+
+nok $g.parse( q{}, rule => 'statement' ), 'statement';
+# No further testing of statement needed, the alternations will suffice.
+
 ok $g.parse( q{}, rule => 'statementBlock' ), 'statementBlock';
 ok $g.parse( q{}, rule => 'statementList' ), 'statementList';
 
@@ -497,15 +504,28 @@ nok $g.parse( qq{\x[00ab]}, rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 ok  $g.parse( q{a},         rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 ok  $g.parse( qq{\x[04cb]}, rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 
-ok $g.parse( q{}, rule => 'variableDeclaration' ), 'variableDeclaration';
-ok $g.parse( q{}, rule => 'variableDeclarationList' ),
+nok $g.parse( q{}, rule => 'variableDeclaration' ), 'variableDeclaration';
+ok  $g.parse( q{A}, rule => 'variableDeclaration' ), 'variableDeclaration';
+ok  $g.parse( q{A = 1}, rule => 'variableDeclaration' ), 'variableDeclaration';
+
+nok $g.parse( q{}, rule => 'variableDeclarationList' ),
    'variableDeclarationList';
+ok  $g.parse( q{a=1}, rule => 'variableDeclarationList' ),
+   'variableDeclarationList';
+ok  $g.parse( q{a=1,b=a}, rule => 'variableDeclarationList' ),
+   'variableDeclarationList';
+
 ok $g.parse( q{}, rule => 'variableDeclarationListNoIn' ),
    'variableDeclarationListNoIn';
 ok $g.parse( q{}, rule => 'variableDeclarationNoIn' ),
    'variableDeclarationNoIn';
-ok $g.parse( q{}, rule => 'variableStatement' ), 'variableStatement';
-ok $g.parse( q{}, rule => 'whileStatement' ), 'whileStatement';
+
+nok $g.parse( q{}, rule => 'variableStatement' ), 'variableStatement';
+ok  $g.parse( q{varA=1;}, rule => 'variableStatement' ), 'variableStatement';
+ok  $g.parse( q{varA=1,b=A;}, rule => 'variableStatement' ), 'variableStatement';
+
+nok $g.parse( q{}, rule => 'whileStatement' ), 'whileStatement';
+ok  $g.parse( q{while(1)a++;}, rule => 'whileStatement' ), 'whileStatement';
 
 #
 # Literal
