@@ -37,7 +37,7 @@ grammar Grammar::ECMAScript {
   #
   rule formalParameterList {
 #    '(' [<LT>* <Identifier> [<LT>* ',' <LT>* <Identifier>]*]? <LT>* ')'
-    '(' <LT>* <Identifier>* % (<LT>* ',' <LT>*) <LT>* ')'
+    '(' <LT>* <Identifier>* % [<LT>* ',' <LT>*] <LT>* ')'
   }
 
   rule functionBody {
@@ -79,12 +79,12 @@ grammar Grammar::ECMAScript {
 
   rule variableDeclarationList {
 #    <variableDeclaration> [ <LT>* ',' <LT>* <variableDeclaration> ]*
-    <variableDeclaration>+ % ','
+    <variableDeclaration>+ % [<LT>* ',' <LT>*]
   }
 
   rule variableDeclarationListNoIn {
 #    <variableDeclarationNoIn> [ <LT>* ',' <LT>* <variableDeclarationNoIn> ]*
-    <variableDeclarationNoIn>+ % ','
+    <variableDeclarationNoIn>+ % [<LT>* ',' <LT>*]
   }
 
   rule variableDeclaration {
@@ -106,10 +106,14 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
+  # has tests
+  #
   token emptyStatement {
     ';'
   }
 
+  # has tests
+  #
   rule expressionStatement {
     <expression> [ <LT> | ';' ]
   }
@@ -193,6 +197,8 @@ grammar Grammar::ECMAScript {
     'default' <LT>* ':' <LT>* <statementList>?
   }
 
+  # has tests
+  #
   rule throwStatement {
     'throw' <expression> [ <LT> | ';' ]
   }
@@ -214,12 +220,12 @@ grammar Grammar::ECMAScript {
   #
   rule expression {
 #   <assignmentExpression> [ <LT>* ',' <LT>* <assignmentExpression> ]*
-    <assignmentExpression>+ % ','
+    <assignmentExpression>+ % [<LT>* ',' <LT>*]
   }
 
   rule expressionNoIn {
 #   <assignmentExpressionNoIn> [ <LT>* ',' <LT>* <assignmentExpressionNoIn> ]*
-   <assignmentExpressionNoIn>+ % ','
+   <assignmentExpressionNoIn>+ % [<LT>* ',' <LT>*]
   }
 
   rule assignmentExpression {
@@ -246,6 +252,8 @@ grammar Grammar::ECMAScript {
     [ <primaryExpression> | <functionExpression> | 'new' <LT>* <memberExpression> <LT>* <arguments> ] [ <LT>* <memberExpressionSuffix> ]*
   }
 
+  # has tests
+  #
   rule memberExpressionSuffix {
     <indexSuffix>
   | <propertyReferenceSuffix>
@@ -263,7 +271,7 @@ grammar Grammar::ECMAScript {
 
   rule arguments {
 #    '(' [<LT>* <assignmentExpression> [<LT>* ',' <LT>* <assignmentExpression>]*]? <LT>* ')'
-    '(' [<LT>* <assignmentExpression>+ % ',']? <LT>* ')'
+    '(' [<LT>* <assignmentExpression>+ % [<LT>* ','<LT>*] ]? <LT>* ')'
   }
 
   # has tests
@@ -281,6 +289,8 @@ grammar Grammar::ECMAScript {
   #
   # Literal
   #
+  # has tests
+  #
   token assignmentOperator {
     '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '>>>=' | '&=' | '^=' | '|='
   }
@@ -295,47 +305,47 @@ grammar Grammar::ECMAScript {
 
   rule logicalORExpression {
 #    <logicalANDExpression> [<LT>* '||' <LT>* <logicalANDExpression> ]*
-    <logicalANDExpression>+ % '||'
+    <logicalANDExpression>+ % [<LT>* '||' <LT>*]
   }
 
   rule logicalORExpressionNoIn {
 #    <logicalANDExpressionNoIn> [ <LT>* '||' <LT>* <logicalANDExpressionNoIn> ]*
-    <logicalANDExpressionNoIn>+ % '||'
+    <logicalANDExpressionNoIn>+ % [<LT>* '||' <LT>*]
   }
 
   rule logicalANDExpression {
 #    <bitwiseORExpression> [ <LT>* '&&' <LT>* <bitwiseORExpression> ]*
-    <bitwiseORExpression>+ % '&&'
+    <bitwiseORExpression>+ % [<LT>* '&&' <LT>*]
   }
 
   rule logicalANDExpressionNoIn {
 #    <bitwiseORExpressionNoIn> [ <LT>* '&&' <LT>* <bitwiseORExpressionNoIn> ]*
-    <bitwiseORExpressionNoIn>+ % '&&'
+    <bitwiseORExpressionNoIn>+ % [<LT>* '&&' <LT>*]
   }
 
   rule bitwiseORExpression {
 #    <bitwiseXORExpression> [ <LT>* '|' <LT>* <bitwiseXORExpression> ]*
-    <bitwiseXORExpression>+ % '|'
+    <bitwiseXORExpression>+ % [<LT>* '|' <LT>*]
   }
 
   rule bitwiseORExpressionNoIn {
 #    <bitwiseXORExpressionNoIn> [ <LT>* '|' <LT>* <bitwiseXORExpressionNoIn> ]*
-    <bitwiseXORExpressionNoIn>+ % '|'
+    <bitwiseXORExpressionNoIn>+ % [<LT>* '|' <LT>*]
   }
 
   rule bitwiseXORExpression {
 #    <bitwiseANDExpression> [ <LT>* '^' <LT>* <bitwiseANDExpression> ]*
-    <bitwiseANDExpression>+ % '^'
+    <bitwiseANDExpression>+ % [<LT>* '^' <LT>*]
   }
 
   rule bitwiseXORExpressionNoIn {
 #    <bitwiseANDExpressionNoIn> [ <LT>* '^' <LT>* <bitwiseANDExpressionNoIn> ]*
-    <bitwiseANDExpressionNoIn>+ % '^'
+    <bitwiseANDExpressionNoIn>+ % [<LT>* '^' <LT>*]
   }
 
   rule bitwiseANDExpression {
 #    <equalityExpression> [ <LT>* '&' <LT>* <equalityExpression> ]*
-    <equalityExpression>+ % '&'
+    <equalityExpression>+ % [<LT>* '&' <LT>*]
   }
 
   rule bitwiseANDExpressionNoIn {
@@ -345,37 +355,37 @@ grammar Grammar::ECMAScript {
 
   rule equalityExpression {
 #    <relationalExpression> [ <LT>* ('==' | '!=' | '===' | '!==') <LT>* <relationalExpression> ]*
-    <relationalExpression>+ % ('==' | '!=' | '===' | '!==')
+    <relationalExpression>+ % [<LT>* ('==' | '!=' | '===' | '!==') <LT>*]
   }
 
   rule equalityExpressionNoIn {
 #    <relationalExpressionNoIn> [ <LT>* ('==' | '!=' | '===' | '!==') <LT>* <relationalExpressionNoIn> ]*
-    <relationalExpressionNoIn>+ % ('==' | '!=' | '===' | '!==')
+    <relationalExpressionNoIn>+ % [<LT>* ('==' | '!=' | '===' | '!==') <LT>*]
   }
 
   rule relationalExpression {
 #    <shiftExpression> [ <LT>* ('<' | '>' | '<=' | '>=' | 'instanceof' | 'in') <LT>* <shiftExpression> ]*
-    <shiftExpression>+ % ('<' | '>' | '<=' | '>=' | 'instanceof' | 'in')
+    <shiftExpression>+ % [<LT>* ('<' | '>' | '<=' | '>=' | 'instanceof' | 'in') <LT>*]
   }
 
   rule relationalExpressionNoIn {
 #    <shiftExpression> [ <LT>* ('<' | '>' | '<=' | '>=' | 'instanceof') <LT>* <shiftExpression> ]*
-    <shiftExpression>+ % ('<' | '>' | '<=' | '>=' | 'instanceof')
+    <shiftExpression>+ % [<LT>* ('<' | '>' | '<=' | '>=' | 'instanceof') <LT>*]
   }
 
   rule shiftExpression {
 #    <additiveExpression> [ <LT>* ('<<' | '>>' | '>>>') <LT>* <additiveExpression> ]*
-    <additiveExpression>+ % ('<<' | '>>' | '>>>')
+    <additiveExpression>+ % [<LT>* ('<<' | '>>' | '>>>') <LT>*]
   }
 
   rule additiveExpression {
 #    <multiplicativeExpression> [ <LT>* ('+' | '-') <LT>* <multiplicativeExpression> ]*
-    <multiplicativeExpression>+ % ('+' | '-')
+    <multiplicativeExpression>+ % [<LT>* ('+' | '-') <LT>*]
   }
 
   rule multiplicativeExpression {
 #    <unaryExpression> [ <LT>* ('*' | '/' | '%') <LT>* <unaryExpression> ]*
-    <unaryExpression>+ % ('*' | '/' | '%')
+    <unaryExpression>+ % [<LT>* ('*' | '/' | '%') <LT>*]
   }
 
   rule unaryExpression {
@@ -408,7 +418,7 @@ grammar Grammar::ECMAScript {
   #
   rule objectLiteral {
 #    '{' <LT>* <propertyNameAndValue> [ <LT>* ',' <LT>* <propertyNameAndValue> ]* <LT>* '}'
-    '{' <LT>* <propertyNameAndValue>+ % ',' <LT>* '}'
+    '{' <LT>* <propertyNameAndValue>+ % [<LT>* ',' <LT>*] <LT>* '}'
   }
 
   rule propertyNameAndValue {
@@ -514,7 +524,7 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   token EscapeCharacter {
-    <[ ' " \\ b f n r t v ] + [0..9] + [ x u ]>
+    <[ ' " \\ b f n r t v ] + [ 0 .. 9 ] + [ x u ]>
   }
 
   # has tests

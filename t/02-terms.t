@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 314;
+plan 323;
 
 use Grammar::ECMAScript;
 
@@ -157,7 +157,11 @@ ok  $g.parse( q{E-2}, rule => 'ExponentPart' ), 'ExponentPart';
 
 ok $g.parse( q{}, rule => 'expression' ), 'expression';
 ok $g.parse( q{}, rule => 'expressionNoIn' ), 'expressionNoIn';
-ok $g.parse( q{}, rule => 'expressionStatement' ), 'expressionStatement';
+
+nok $g.parse( q{}, rule => 'expressionStatement' ), 'expressionStatement';
+ok  $g.parse( q{a;}, rule => 'expressionStatement' ), 'expressionStatement';
+ok  $g.parse( qq{a\n}, rule => 'expressionStatement' ), 'expressionStatement';
+
 ok $g.parse( q{}, rule => 'finallyClause' ), 'finallyClause';
 ok $g.parse( q{}, rule => 'forInStatement' ), 'forInStatement';
 ok $g.parse( q{}, rule => 'forInStatementInitialiserPart' ),
@@ -302,8 +306,20 @@ ok  $g.parse( qq{\x[2028]}, rule => 'LT' ), 'LT literal';
 ok  $g.parse( qq{\x[2029]}, rule => 'LT' ), 'LT literal';
 
 ok $g.parse( q{}, rule => 'memberExpression' ), 'memberExpression';
-ok $g.parse( q{}, rule => 'memberExpressionSuffix' ),
+
+nok $g.parse( q{}, rule => 'memberExpressionSuffix' ),
    'memberExpressionSuffix';
+ok  $g.parse( qq{[\na]}, rule => 'memberExpressionSuffix' ),
+   'memberExpressionSuffix';
+ok  $g.parse( qq{[a\n]}, rule => 'memberExpressionSuffix' ),
+   'memberExpressionSuffix';
+ok  $g.parse( qq{[\na\n]}, rule => 'memberExpressionSuffix' ),
+   'memberExpressionSuffix';
+ok  $g.parse( q{. a_}, rule => 'memberExpressionSuffix' ),
+   'memberExpressionSuffix';
+ok  $g.parse( qq{.\na_}, rule => 'memberExpressionSuffix' ),
+   'memberExpressionSuffix';
+
 ok $g.parse( q{}, rule => 'multiplicativeExpression' ),
    'multiplicativeExpression';
 ok $g.parse( q{}, rule => 'newExpression' ), 'newExpression';
@@ -424,7 +440,11 @@ ok  $g.parse( q{'\y'},         rule => 'StringLiteral' ), 'StringLiteral';
 ok  $g.parse( q{'foo bar'},    rule => 'StringLiteral' ), 'StringLiteral';
 
 ok $g.parse( q{}, rule => 'switchStatement' ), 'switchStatement';
-ok $g.parse( q{}, rule => 'throwStatement' ), 'throwStatement';
+
+nok $g.parse( q{},            rule => 'throwStatement' ), 'throwStatement';
+ok  $g.parse( q{throw a_;},   rule => 'throwStatement' ), 'throwStatement';
+ok  $g.parse( qq{throw a_\n}, rule => 'throwStatement' ), 'throwStatement';
+
 ok $g.parse( q{}, rule => 'TOP' ), 'TOP';
 ok $g.parse( q{}, rule => 'tryStatement' ), 'tryStatement';
 ok $g.parse( q{}, rule => 'unaryExpression' ), 'unaryExpression';
