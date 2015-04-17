@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 312;
+plan 314;
 
 use Grammar::ECMAScript;
 
@@ -217,8 +217,11 @@ ok  $g.parse( q{var a}, rule => 'forStatementInitialiserPart' ),
 
 ok $g.parse( q{}, rule => 'functionBody' ), 'functionBody';
 
-ok $g.parse( q{}, rule => 'functionDeclaration' ), 'functionDeclaration';
-ok $g.parse( q{}, rule => 'functionExpression' ), 'functionExpression';
+nok $g.parse( q{}, rule => 'functionDeclaration' ), 'functionDeclaration';
+ok  $g.parse( q{function a(){a++;}}, rule => 'functionDeclaration' ), 'functionDeclaration';
+
+nok $g.parse( q{}, rule => 'functionExpression' ), 'functionExpression';
+ok  $g.parse( q{function(){a++;}}, rule => 'functionExpression' ), 'functionExpression';
 
 nok $g.parse( q{},  rule => 'HexDigit' ), 'HexDigit';
 ok  $g.parse( q{0}, rule => 'HexDigit' ), 'HexDigit';
@@ -435,13 +438,16 @@ ok  $g.parse( q{\y},        rule => 'SingleStringCharacter' ),
 nok $g.parse( q{}, rule => 'sourceElement' ), 'sourceElement';
 # No further testing of sourceElement needed, the alternations will suffice.
 
-ok $g.parse( q{}, rule => 'sourceElements' ), 'sourceElements';
+nok $g.parse( q{}, rule => 'sourceElements' ), 'sourceElements';
+ok  $g.parse( q{a++;}, rule => 'sourceElements' ), 'sourceElements';
 
 nok $g.parse( q{}, rule => 'statement' ), 'statement';
 # No further testing of statement needed, the alternations will suffice.
 
 ok $g.parse( q{}, rule => 'statementBlock' ), 'statementBlock';
-ok $g.parse( q{}, rule => 'statementList' ), 'statementList';
+
+nok $g.parse( q{}, rule => 'statementList' ), 'statementList';
+ok  $g.parse( q{a++;}, rule => 'statementList' ), 'statementList';
 
 nok $g.parse( q{},             rule => 'StringLiteral' ), 'StringLiteral';
 nok $g.parse( qq{'\n'},        rule => 'StringLiteral' ), 'StringLiteral';

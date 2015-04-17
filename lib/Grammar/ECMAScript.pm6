@@ -13,6 +13,8 @@ grammar Grammar::ECMAScript {
     <LT>* <sourceElements> <LT>* <EOF>
   }
 
+  # has tests
+  #
   rule sourceElements {
 #    <sourceElement> [ <LT>* <sourceElement> ]*
     <sourceElement>+ % <LT>
@@ -28,10 +30,14 @@ grammar Grammar::ECMAScript {
   #
   # functions
   #
+  # has tests
+  #
   rule functionDeclaration {
     'function' <LT>* <Identifier> <LT>* <formalParameterList> <LT>* <functionBody>
   }
 
+  # has tests
+  #
   rule functionExpression {
     'function' <LT>* <Identifier>? <LT>* <formalParameterList> <LT>* <functionBody>
   }
@@ -73,6 +79,8 @@ grammar Grammar::ECMAScript {
     '{' <LT>* <statementList>? <LT>* '}'
   }
 
+  # has tests
+  #
   rule statementList {
 #    <statement> [<LT>* <statement>]*
     <statement>+ % <LT>
