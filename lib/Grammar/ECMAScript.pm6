@@ -14,7 +14,8 @@ grammar Grammar::ECMAScript {
   }
 
   rule sourceElements {
-    <sourceElement> [ <LT>* <sourceElement> ]*
+#    <sourceElement> [ <LT>* <sourceElement> ]*
+    <sourceElement>+ % <LT>
   }
 
   rule sourceElement {
@@ -388,11 +389,15 @@ grammar Grammar::ECMAScript {
     <unaryExpression>+ % [<LT>* ('*' | '/' | '%') <LT>*]
   }
 
+  # has tests
+  #
   rule unaryExpression {
     <postfixExpression>
   | [ 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' ] <unaryExpression>
   }
 
+  # has tests
+  #
   rule postfixExpression {
     <leftHandSideExpression> [ '++' | '--' ]?
   }

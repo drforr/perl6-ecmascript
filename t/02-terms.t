@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 323;
+plan 324;
 
 use Grammar::ECMAScript;
 
@@ -339,7 +339,10 @@ ok  $g.parse( q{3.27e-7}, rule => 'NumericLiteral' ), 'NumericLiteral';
 ok  $g.parse( q{0x234af}, rule => 'NumericLiteral' ), 'NumericLiteral';
 
 ok $g.parse( q{}, rule => 'objectLiteral' ), 'objectLiteral';
-ok $g.parse( q{}, rule => 'postfixExpression' ), 'postfixExpression';
+
+nok $g.parse( q{},    rule => 'postfixExpression' ), 'postfixExpression';
+ok  $g.parse( q{a++}, rule => 'postfixExpression' ), 'postfixExpression';
+
 ok $g.parse( q{}, rule => 'primaryExpression' ), 'primaryExpression';
 
 nok $g.parse( q{},             rule => 'propertyName' ), 'propertyName';
@@ -447,7 +450,9 @@ ok  $g.parse( qq{throw a_\n}, rule => 'throwStatement' ), 'throwStatement';
 
 ok $g.parse( q{}, rule => 'TOP' ), 'TOP';
 ok $g.parse( q{}, rule => 'tryStatement' ), 'tryStatement';
-ok $g.parse( q{}, rule => 'unaryExpression' ), 'unaryExpression';
+
+nok $g.parse( q{}, rule => 'unaryExpression' ), 'unaryExpression';
+ok  $g.parse( q{void a}, rule => 'unaryExpression' ), 'unaryExpression';
 
 #
 # Literal
