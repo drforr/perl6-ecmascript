@@ -4,9 +4,6 @@ use v6;
 # ANTLR grammar Copyright 2008 Chris Lambrou. All rights reserved.
 #
 
-# XXX 'LT!' => LT # Because '!' just means "Don't render in AST"
-# XXX 'EOF!' => EOF # Because '!' just means "Don't render in AST"
-
 grammar Grammar::ECMAScript {
 
   # has tests
@@ -19,7 +16,7 @@ grammar Grammar::ECMAScript {
   #
   rule sourceElements {
 #    <sourceElement> [ <LT>* <sourceElement> ]*
-    <sourceElement>+ % <LT>
+    <sourceElement>+ % <LT>*
   }
 
   # has tests - Mainly bcause it's sufficient to test the children.
@@ -1180,7 +1177,7 @@ grammar Grammar::ECMAScript {
   #
   token LineComment {
 #    '//' ~( <LT> )*
-    '//' .* [ \n | $ ]
+    '//' .* [ <LT> | $ ]
   }
 
   #

@@ -2,7 +2,7 @@ use v6;
 
 use Test;
 
-plan 352;
+plan 355;
 
 use Grammar::ECMAScript;
 
