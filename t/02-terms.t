@@ -85,8 +85,7 @@ ok  $g.parse( q{a(b)}, rule => 'callExpression' ), 'callExpression';
 nok $g.parse( q{}, rule => 'callExpressionSuffix' ), 'callExpressionSuffix';
 # No further testing of callExpressionSuffix needed, the alternations will suffice.
 
-nok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
-ok  $g.parse( q{{}}, rule => 'caseBlock' ), 'caseBlock';
+ok $g.parse( q{}, rule => 'caseBlock' ), 'caseBlock';
 
 nok $g.parse( q{}, rule => 'caseClause' ), 'caseClause';
 ok  $g.parse( q{caseA:}, rule => 'caseClause' ), 'caseClause';
@@ -153,12 +152,12 @@ ok  $g.parse( q{\"},        rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
 ok  $g.parse( q{\n},        rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
-ok  $g.parse( qq{\\\x[2028]}, rule => 'DoubleStringCharacter' ), # XXX ???
-    'DoubleStringCharacter';
 ok  $g.parse( q{\y},        rule => 'DoubleStringCharacter' ),
     'DoubleStringCharacter';
 
-ok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
+nok $g.parse( q{}, rule => 'doWhileStatement' ), 'doWhileStatement';
+ok  $g.parse( q{do{}while(1);}, rule => 'doWhileStatement' ),
+    'doWhileStatement';
 
 #
 # Literal
@@ -329,11 +328,20 @@ nok $g.parse( q{}, rule => 'leftHandSideExpression' ),
 #
 # Literal
 #
-nok $g.parse( q{},          rule => 'LineComment' ), 'LineComment literal';
-ok  $g.parse( q{//},        rule => 'LineComment' ), 'LineComment literal';
-ok  $g.parse( q{// },       rule => 'LineComment' ), 'LineComment literal';
-ok  $g.parse( q{//foo},     rule => 'LineComment' ), 'LineComment literal';
-ok  $g.parse( q{//foo bar}, rule => 'LineComment' ), 'LineComment literal';
+nok $g.parse( q{},                   rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( q{//},                 rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( q{// },                rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( q{//foo},              rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( q{//foo bar},          rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( qq{//foo bar\n},       rule => 'LineComment' ),
+    'LineComment literal';
+ok  $g.parse( qq{//foo bar\x[2029]}, rule => 'LineComment' ),
+    'LineComment literal';
 
 nok $g.parse( q{},             rule => 'literal' ), 'literal';
 nok $g.parse( qq{'\n'},        rule => 'literal' ), 'literal';
@@ -596,7 +604,7 @@ ok  $g.parse( q{A}, rule => 'variableDeclarationNoIn' ),
     'variableDeclarationNoIn';
 ok  $g.parse( q{A=1}, rule => 'variableDeclarationNoIn' ),
     'variableDeclarationNoIn';
-ok  $g.parse( q{a=c in b}, rule => 'variableDeclarationNoIn' ),
+nok $g.parse( q{a=c in b}, rule => 'variableDeclarationNoIn' ),
     'variableDeclarationNoIn';
 
 nok $g.parse( q{}, rule => 'variableStatement' ), 'variableStatement';
