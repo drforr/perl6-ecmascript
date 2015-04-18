@@ -70,7 +70,6 @@ ok  $g.parse( q{a|b}, rule => 'bitwiseORExpressionNoIn' ),
 
 nok $g.parse( q{}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
 ok  $g.parse( q{a^b}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
-#ok  $g.parse( q{a^b in c}, rule => 'bitwiseXORExpression' ), 'bitwiseXORExpression';
 
 ok $g.parse( q{}, rule => 'bitwiseXORExpressionNoIn' ),
    'bitwiseXORExpressionNoIn';
@@ -583,10 +582,14 @@ nok $g.parse( qq{\x[00ab]}, rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 ok  $g.parse( q{a},         rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 ok  $g.parse( qq{\x[04cb]}, rule => 'UnicodeLetter' ), 'UnicodeLetter literal';
 
-nok $g.parse( q{}, rule => 'variableDeclaration' ), 'variableDeclaration';
-ok  $g.parse( q{A}, rule => 'variableDeclaration' ), 'variableDeclaration';
-ok  $g.parse( q{A=1}, rule => 'variableDeclaration' ), 'variableDeclaration';
-ok  $g.parse( q{a=c in b}, rule => 'variableDeclaration' ), 'variableDeclaration';
+nok $g.parse( q{}, rule => 'variableDeclaration' ),
+    'variableDeclaration';
+ok  $g.parse( q{A}, rule => 'variableDeclaration' ),
+    'variableDeclaration';
+ok  $g.parse( q{A=1}, rule => 'variableDeclaration' ),
+    'variableDeclaration';
+ok  $g.parse( q{a=c in b}, rule => 'variableDeclaration' ),
+    'variableDeclaration';
 
 nok $g.parse( q{}, rule => 'variableDeclarationList' ),
    'variableDeclarationList';
