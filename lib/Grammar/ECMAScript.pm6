@@ -9,6 +9,8 @@ use v6;
 
 grammar Grammar::ECMAScript {
 
+  # has tests
+  #
   rule TOP {
     <LT>* <sourceElements> <LT>* <EOF>
   }
@@ -33,13 +35,17 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   rule functionDeclaration {
-    'function' <LT>* <Identifier> <LT>* <formalParameterList> <LT>* <functionBody>
+    'function' <LT>* <Identifier>
+               <LT>* <formalParameterList>
+               <LT>* <functionBody>
   }
 
   # has tests
   #
   rule functionExpression {
-    'function' <LT>* <Identifier>? <LT>* <formalParameterList> <LT>* <functionBody>
+    'function' <LT>* <Identifier>?
+               <LT>* <formalParameterList>
+               <LT>* <functionBody>
   }
 
   # has tests
@@ -112,6 +118,8 @@ grammar Grammar::ECMAScript {
     <Identifier> <LT>* <initialiser>?
   }
 
+  # has tests
+  #
   rule variableDeclarationNoIn {
     <Identifier> <LT>* <initialiserNoIn>?
   }
@@ -122,6 +130,8 @@ grammar Grammar::ECMAScript {
     '=' <LT>* <assignmentExpression>
   }
 
+  # has tests
+  #
   rule initialiserNoIn {
     '=' <LT>* <assignmentExpressionNoIn>
   }
@@ -142,7 +152,9 @@ grammar Grammar::ECMAScript {
   }
 
   rule ifStatement {
-    'if' <LT>* '(' <LT>* <expression> <LT>* ')' <LT>* <statement> [ <LT>* 'else' <LT>* <statement> ]?
+    'if' <LT>* '(' <LT>* <expression> <LT>* ')'
+         <LT>* <statement>
+         [ <LT>* 'else' <LT>* <statement> ]?
   }
 
   # has tests - Mainly bcause it's sufficient to test the children.
@@ -157,13 +169,16 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   rule doWhileStatement {
-    'do' <LT>* <statement> <LT>* 'while' <LT>* '(' <expression> ')' [ <LT> | ';' ]
+    'do' <LT>* <statement>
+         <LT>* 'while'
+         <LT>* '(' <expression> ')' [ <LT> | ';' ]
   }
 
   # has tests
   #
   rule whileStatement {
-    'while' <LT>* '(' <LT>* <expression> <LT>* ')' <LT>* <statement>
+    'while' <LT>* '(' <LT>* <expression> <LT>* ')'
+            <LT>* <statement>
   }
 
   rule forStatement {
@@ -177,10 +192,14 @@ grammar Grammar::ECMAScript {
   | 'var' <LT>* <variableDeclarationListNoIn>
   }
 
+  # has tests
+  #
   rule forInStatement {
     'for' <LT>* '(' <LT>* <forInStatementInitialiserPart> <LT>* 'in' <LT>* <expression> <LT>* ')' <LT>* <statement>
   }
 
+  # has tests
+  #
   rule forInStatementInitialiserPart {
     <leftHandSideExpression>
   | 'var' <LT>* <variableDeclarationNoIn>
@@ -204,6 +223,8 @@ grammar Grammar::ECMAScript {
     'return' <expression>? [ <LT> | ';' ]
   }
 
+  # has tests
+  #
   rule withStatement {
     'with' <LT>* '(' <LT>* <expression> <LT>* ')' <LT>* <statement>
   }
@@ -214,10 +235,14 @@ grammar Grammar::ECMAScript {
     <Identifier> <LT>* ':' <LT>* <statement>
   }
 
+  # has tests
+  #
   rule switchStatement {
     'switch' <LT>* '(' <LT>* <expression> <LT>* ')' <LT>* <caseBlock>
   }
 
+  # has tests
+  #
   rule caseBlock {
     '{' [ <LT>* <caseClause> ]* [ <LT>* <defaultClause> [ <LT>* <caseClause> ]* ]? <LT>* '}'
   }
@@ -247,9 +272,12 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   rule catchClause {
-    'catch' <LT>* '(' <LT>* <Identifier> <LT>* ')' <LT>* statementBlock
+    'catch' <LT>* '(' <LT>* <Identifier> <LT>* ')'
+            <LT>* statementBlock
   }
 
+  # has tests
+  #
   rule finallyClause {
     'finally' <LT>* <statementBlock>
   }
@@ -264,6 +292,8 @@ grammar Grammar::ECMAScript {
     <assignmentExpression>+ % [<LT>* ',' <LT>*]
   }
 
+  # has tests
+  #
   rule expressionNoIn {
 #   <assignmentExpressionNoIn> [ <LT>* ',' <LT>* <assignmentExpressionNoIn> ]*
    <assignmentExpressionNoIn>+ % [<LT>* ',' <LT>*]
@@ -273,12 +303,16 @@ grammar Grammar::ECMAScript {
   #
   rule assignmentExpression {
     <conditionalExpression>
-  | <leftHandSideExpression> <LT>* <assignmentOperator> <LT>* <assignmentExpression>
+  | <leftHandSideExpression> <LT>* <assignmentOperator>
+                             <LT>* <assignmentExpression>
   }
 
+  # has tests
+  #
   rule assignmentExpressionNoIn {
     <conditionalExpressionNoIn>
-  | <leftHandSideExpression> <LT>* <assignmentOperator> <LT>* <assignmentExpressionNoIn>
+  | <leftHandSideExpression> <LT>* <assignmentOperator>
+                             <LT>* <assignmentExpressionNoIn>
   }
 
   # has tests - Mainly bcause it's sufficient to test the children.
@@ -349,7 +383,10 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   rule conditionalExpression {
-    <logicalORExpression> [ <LT>* '?' <LT>* <assignmentExpression> <LT>* ':' <LT>* <assignmentExpression> ]?
+    <logicalORExpression> [ <LT>* '?'
+                            <LT>* <assignmentExpression>
+                            <LT>* ':'
+                            <LT>* <assignmentExpression> ]?
   }
 
   rule conditionalExpressionNoIn {
@@ -363,6 +400,8 @@ grammar Grammar::ECMAScript {
     <logicalANDExpression>+ % [<LT>* '||' <LT>*]
   }
 
+  # has tests
+  #
   rule logicalORExpressionNoIn {
 #    <logicalANDExpressionNoIn> [ <LT>* '||' <LT>* <logicalANDExpressionNoIn> ]*
     <logicalANDExpressionNoIn>+ % [<LT>* '||' <LT>*]
@@ -375,6 +414,8 @@ grammar Grammar::ECMAScript {
     <bitwiseORExpression>+ % [<LT>* '&&' <LT>*]
   }
 
+  # has tests
+  #
   rule logicalANDExpressionNoIn {
 #    <bitwiseORExpressionNoIn> [ <LT>* '&&' <LT>* <bitwiseORExpressionNoIn> ]*
     <bitwiseORExpressionNoIn>+ % [<LT>* '&&' <LT>*]
@@ -387,6 +428,8 @@ grammar Grammar::ECMAScript {
     <bitwiseXORExpression>+ % [<LT>* '|' <LT>*]
   }
 
+  # has tests
+  #
   rule bitwiseORExpressionNoIn {
 #    <bitwiseXORExpressionNoIn> [ <LT>* '|' <LT>* <bitwiseXORExpressionNoIn> ]*
     <bitwiseXORExpressionNoIn>+ % [<LT>* '|' <LT>*]
@@ -411,9 +454,11 @@ grammar Grammar::ECMAScript {
     <equalityExpression>+ % [<LT>* '&' <LT>*]
   }
 
+  # has tests
+  #
   rule bitwiseANDExpressionNoIn {
 #    <equalityExpressionNoIn> [ <LT>* '&' <LT>* <equalityExpressionNoIn> ]*
-    <equalityExpressionNoIn>+ '&'
+    <equalityExpressionNoIn>+ % [<LT>* '&' <LT>*]
   }
 
   # has tests
@@ -423,6 +468,8 @@ grammar Grammar::ECMAScript {
     <relationalExpression>+ % [<LT>* ('==' | '!=' | '===' | '!==') <LT>*]
   }
 
+  # has tests
+  #
   rule equalityExpressionNoIn {
 #    <relationalExpressionNoIn> [ <LT>* ('==' | '!=' | '===' | '!==') <LT>* <relationalExpressionNoIn> ]*
     <relationalExpressionNoIn>+ % [<LT>* ('==' | '!=' | '===' | '!==') <LT>*]
@@ -435,6 +482,8 @@ grammar Grammar::ECMAScript {
     <shiftExpression>+ % [<LT>* ('<' | '>' | '<=' | '>=' | 'instanceof' | 'in') <LT>*]
   }
 
+  # has tests
+  #
   rule relationalExpressionNoIn {
 #    <shiftExpression> [ <LT>* ('<' | '>' | '<=' | '>=' | 'instanceof') <LT>* <shiftExpression> ]*
     <shiftExpression>+ % [<LT>* ('<' | '>' | '<=' | '>=' | 'instanceof') <LT>*]
@@ -465,7 +514,8 @@ grammar Grammar::ECMAScript {
   #
   rule unaryExpression {
     <postfixExpression>
-  | [ 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' ] <unaryExpression>
+  | [ 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' ]
+    <unaryExpression>
   }
 
   # has tests
@@ -489,7 +539,8 @@ grammar Grammar::ECMAScript {
   # has tests
   #
   rule arrayLiteral {
-    '[' <LT>* <assignmentExpression>? [ <LT>* ',' [ <LT>* <assignmentExpression> ]? ]* <LT>* ']'
+    '[' <LT>* <assignmentExpression>?
+        [ <LT>* ',' [ <LT>* <assignmentExpression> ]? ]* <LT>* ']'
   }
 
   #
@@ -553,6 +604,8 @@ grammar Grammar::ECMAScript {
   | '\\' <EscapeSequence>
   }
 
+  # has tests
+  #
   token EOF {
     $$
   }
