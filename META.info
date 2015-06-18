@@ -1,10 +1,10 @@
 {
-	"name"        : "ReadLine",
+	"name"        : "Grammar::ECMAScript",
 	"version"     : "*",
-	"description" : "Perl 6 interface to ReadLine, the text-based line reading libary",
+	"description" : "Grammar for ECMAScript AKA JavaScript",
 	"depends"     : [ ],
 	"provides"    : {
-		"ReadLine"	: "lib/ReadLine.pm6"
+		"Grammar::ECMAScript"	: "lib/Grammar/ECMAScript.pm6"
 	},
-	"source-url"  : "git://github.com/drforr/perl6-readline.git"
+	"source-url"  : "git://github.com/drforr/perl6-ecmascript.git"
 }
